@@ -34,15 +34,6 @@ function consent(status) {
 }
 
 function sendInteraction(name) {
-  console.log(
-  "Consents:",
-  SalesforceInteractions.getConsents()
-);
-
-console.log(
-  "Sitemap:",
-  SalesforceInteractions.getSitemapResult()
-);
   if (!sdkReady || !trackingAllowed) {
     log(`Not sent: ${name} (SDK or consent not ready)`);
     return;
