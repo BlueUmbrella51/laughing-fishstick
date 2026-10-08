@@ -3,12 +3,40 @@
   
   <head>
     <script src="https://cdn.c360a.salesforce.com/beacon/c360a/cf22d231-c8be-40d3-b864-d82cc67d8f72/scripts/c360a.min.js"></script>
+    
     <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Salesforce Data 360 Event Lab</title><style>
 :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#14243a;background:#f2f6fc}body{margin:0}header{background:#102e55;color:white;padding:36px max(20px,calc((100% - 950px)/2))}main{max-width:950px;margin:28px auto;padding:0 18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}.card{background:white;border:1px solid #dce6f3;border-radius:16px;padding:22px;box-shadow:0 5px 16px #143a6010}button{background:#076bd2;color:white;border:0;border-radius:9px;padding:12px 16px;font-weight:650;cursor:pointer;margin:5px 6px 5px 0}button.secondary{background:#e7effa;color:#12406c}button:disabled{opacity:.5}input{padding:11px;border:1px solid #aabbd0;border-radius:8px;width:90%}small,.muted{color:#62748a}pre{background:#0d1d31;color:#bde7ff;padding:16px;border-radius:12px;overflow:auto;min-height:180px;max-height:400px;font-size:12px}header p{color:#d5e7ff}#status{font-weight:700}label{display:block;margin:12px 0}code{background:#e7effa;padding:2px 5px;border-radius:4px}</style></head><body>
 <header><h1>Salesforce Data 360 · Event Lab</h1><p>GitHub Pages demo for consent-aware web interaction tracking</p></header><main><div class="grid"><section class="card"><h2>1. Consent & SDK</h2><p id="status">SDK not configured</p><label><input style="width:auto" id="consent" type="checkbox"> I agree to optional analytics tracking</label><p class="muted">No Salesforce tracking events are sent until consent is granted.</p><button id="init">Initialize SDK</button><button class="secondary" id="clear">Clear log</button></section><section class="card"><h2>2. Test events</h2><p>Trigger sample website interactions.</p><button data-event="pageView">Track page view</button><button data-event="productView">View product</button><button data-event="addToCart">Add to cart</button><button data-event="ctaClick">Click CTA</button><p><small>Custom events are examples. Map their names and payloads to your Data 360 schema.</small></p></section></div><section class="card" style="margin-top:18px"><h2>3. Identify visitor (optional)</h2><label>Demo customer ID <input id="customer" placeholder="example-customer-123" autocomplete="off"></label><button id="identify">Send identification event</button><p><small>Use fake identifiers for testing. Configure identity mapping in Salesforce before using real customer data.</small></p></section><section class="card" style="margin-top:18px"><h2>4. Event activity</h2><p class="muted">Local log of event attempts, not proof of successful ingestion. Check DevTools Network and Salesforce data streams to verify delivery.</p><pre id="log" aria-live="polite">Waiting for events…</pre></section></main>
 <script>
 // IMPORTANT: Replace the placeholder in config.js with your Salesforce-generated
 // Web SDK loader URL. See README for SDK-version-specific setup.
+  <script>
+  SalesforceInteractions.init({
+    consents: [{
+      provider: "Demo Website",
+      purpose: "Tracking",
+      status: SalesforceInteractions.ConsentStatus.OptIn
+    }]
+  }).then(() => {
+
+    const sitemapConfig = {
+      global: {},
+      pageTypeDefault: {
+        name: "default",
+        interaction: {
+          name: "Website Page View"
+        }
+      },
+      pageTypes: []
+    };
+
+    SalesforceInteractions.initSitemap(sitemapConfig);
+
+    console.log("Salesforce sitemap configured!");
+  }).catch(error => {
+    console.error("Salesforce initialization error:", error);
+  });
+</script>
 const logEl=document.getElementById('log');let entries=[];let initialized=false;
 function log(type,detail){entries.unshift({time:new Date().toISOString(),type,detail});logEl.textContent=JSON.stringify(entries.slice(0,60),null,2)}
 function sdk(){return window.SalesforceInteractions}
