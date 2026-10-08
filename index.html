@@ -10,7 +10,6 @@
 <script>
 // IMPORTANT: Replace the placeholder in config.js with your Salesforce-generated
 // Web SDK loader URL. See README for SDK-version-specific setup.
- 
 const logEl=document.getElementById('log');let entries=[];let initialized=false;
 function log(type,detail){entries.unshift({time:new Date().toISOString(),type,detail});logEl.textContent=JSON.stringify(entries.slice(0,60),null,2)}
 function sdk(){return window.SalesforceInteractions}
