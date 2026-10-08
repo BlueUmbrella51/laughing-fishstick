@@ -42,20 +42,21 @@ function sendInteraction(name) {
   try {
     const result = getSDK().sendEvent({
       interaction: {
-        name
+        name: name,
+        eventType: "websiteInteraction"
       }
     });
 
-    log(`Submitted to SDK: ${name}`);
+    log(`Submitted custom event: ${name}`);
 
     if (result && typeof result.catch === "function") {
       result.catch(error => {
-        log(`Event error: ${name}`);
+        log(`Event failed: ${name}`, error);
         console.error(error);
       });
     }
   } catch (error) {
-    log(`Event error: ${name}`);
+    log(`Event failed: ${name}`, error);
     console.error(error);
   }
 }
