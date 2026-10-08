@@ -42,8 +42,7 @@ function sendInteraction(name) {
   try {
     const result = getSDK().sendEvent({
       interaction: {
-        name: name,
-        eventType: "websiteInteraction"
+        name: name
       }
     });
 
